@@ -16,6 +16,9 @@ import LevelIncomePage from './pages/LevelIncomePage';
 import ROIIncomePage from './pages/ROIIncomePage';
 import BonusIncomePage from './pages/BonusIncomePage';
 import TotalIncomePage from './pages/TotalIncomePage';
+import Partner from './pages/Partner';
+import Community from './pages/Community';
+import MainLayout from './components/Header/MainLayout.tsx';
 
 const ZecronicsApp: React.FC = () => {
   const { gameState } = useGame();
@@ -98,7 +101,11 @@ const App: React.FC = () => {
           <Route path="/investment/income/roi" element={<ROIIncomePage />} />
           <Route path="/investment/income/bonus" element={<BonusIncomePage />} />
           <Route path="/investment/income/total" element={<TotalIncomePage />} />
+           {/* Partner & Community */}
+<Route path="/partner" element={<MainLayout><Partner /></MainLayout>} />
+  <Route path="/community" element={<MainLayout><Community /></MainLayout>} />
         </Routes>
+        
       </Router>
     </GameProvider>
   );

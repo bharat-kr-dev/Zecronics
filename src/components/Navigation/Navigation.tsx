@@ -10,11 +10,12 @@ const Navigation: React.FC = () => {
     { id: 'upgrades', label: 'Upgrade', icon: '🚀' },
     { id: 'investment', label: 'Invest', icon: '💰', isLink: true, to: '/investment' },
     { id: 'market', label: 'Market', icon: '📈' },
-    { id: 'stats', label: 'Stats', icon: '📊' }
+    { id: 'partner', label: 'Partner', icon: '🤝', isLink: true, to: '/partner' },
+    { id: 'community', label: 'Community', icon: '🌐', isLink: true, to: '/community' },
   ];
 
   return (
-    <div className="bg-black/90 backdrop-blur-xl border-t border-purple-500/20 safe-area-pb shadow-2xl">
+    <div className="bg-black/90 backdrop-blur-xl border-t border-purple-500/20 safe-area-pb shadow-2xl relative">
       {/* Animated glow effect */}
       <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 animate-pulse"></div>
       
@@ -26,8 +27,10 @@ const Navigation: React.FC = () => {
                 key={tab.id}
                 to={tab.to}
                 className={`flex flex-col items-center space-y-1 p-2 sm:p-3 rounded-2xl transition-all duration-300 border border-transparent shadow-lg transform hover:scale-105 ${
-                  tab.id === 'investment' 
+                  tab.id === 'investment'
                     ? 'hover:bg-gradient-to-r hover:from-yellow-500/20 hover:to-orange-500/20 hover:border-yellow-500/30 hover:shadow-yellow-500/20 animate-glow-gold'
+                    : tab.id === 'partner'
+                    ? 'hover:bg-gradient-to-r hover:from-indigo-500/20 hover:to-purple-500/20 hover:border-indigo-500/30 hover:shadow-indigo-500/20 animate-glow-partner'
                     : 'hover:bg-gradient-to-r hover:from-green-500/20 hover:to-blue-500/20 hover:border-green-500/30 hover:shadow-green-500/20 animate-glow-market'
                 }`}
               >
@@ -35,6 +38,8 @@ const Navigation: React.FC = () => {
                 <span className={`text-xs font-semibold transition-colors ${
                   tab.id === 'investment'
                     ? 'text-yellow-300 hover:text-yellow-200'
+                    : tab.id === 'partner'
+                    ? 'text-indigo-300 hover:text-indigo-200'
                     : 'text-green-300 hover:text-green-200'
                 }`}>
                   {tab.label}
@@ -81,34 +86,23 @@ const Navigation: React.FC = () => {
           }
         }
         @keyframes glow-gold {
-          0%, 100% {
-            filter: drop-shadow(0 0 5px rgba(234, 179, 8, 0.4));
-          }
-          50% {
-            filter: drop-shadow(0 0 15px rgba(234, 179, 8, 0.8));
-          }
+          0%, 100% { filter: drop-shadow(0 0 5px rgba(234, 179, 8, 0.4)); }
+          50% { filter: drop-shadow(0 0 15px rgba(234, 179, 8, 0.8)); }
         }
         @keyframes glow-market {
-          0%, 100% {
-            filter: drop-shadow(0 0 5px rgba(34, 197, 94, 0.4));
-          }
-          50% {
-            filter: drop-shadow(0 0 15px rgba(34, 197, 94, 0.8));
-          }
+          0%, 100% { filter: drop-shadow(0 0 5px rgba(34, 197, 94, 0.4)); }
+          50% { filter: drop-shadow(0 0 15px rgba(34, 197, 94, 0.8)); }
         }
-        .animate-glow-active {
-          animation: glow-active 2s ease-in-out infinite;
+        @keyframes glow-partner {
+          0%, 100% { filter: drop-shadow(0 0 5px rgba(99, 102, 241, 0.4)); }
+          50% { filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.8)); }
         }
-        .animate-glow-gold {
-          animation: glow-gold 2s ease-in-out infinite;
-        }
-        .animate-glow-market {
-          animation: glow-market 2s ease-in-out infinite;
-        }
+        .animate-glow-active { animation: glow-active 2s ease-in-out infinite; }
+        .animate-glow-gold { animation: glow-gold 2s ease-in-out infinite; }
+        .animate-glow-market { animation: glow-market 2s ease-in-out infinite; }
+        .animate-glow-partner { animation: glow-partner 2s ease-in-out infinite; }
         @media (max-width: 640px) {
-          .safe-area-pb {
-            padding-bottom: env(safe-area-inset-bottom);
-          }
+          .safe-area-pb { padding-bottom: env(safe-area-inset-bottom); }
         }
       `}</style>
     </div>
