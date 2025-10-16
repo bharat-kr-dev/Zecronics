@@ -37,6 +37,7 @@ const initialUpgrades: Upgrade[] = [
 export const useGameState = () => {
   const [gameState, setGameState] = useState<GameState>({
     points: 0,
+     totalPoints: 0, 
     level: 1,
     energy: 1500,
     maxEnergy: 1500,

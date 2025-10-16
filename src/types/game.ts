@@ -17,6 +17,8 @@ export interface Upgrade {
 }
 
 export interface GameState {
+  totalPoints: number;
+
   points: number;
   level: number;
   energy: number;

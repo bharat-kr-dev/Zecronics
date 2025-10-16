@@ -1,7 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { GameProvider } from './context/GameContext';
-import { useGame } from './context/GameContext';
 import Header from './components/Header/Header';
 import GameArea from './components/GameArea/GameArea';
 import UpgradesTab from './components/Upgrades/UpgradesTab';
@@ -18,30 +17,23 @@ import BonusIncomePage from './pages/BonusIncomePage';
 import TotalIncomePage from './pages/TotalIncomePage';
 import Partner from './pages/Partner';
 import Community from './pages/Community';
-import MainLayout from './components/Header/MainLayout.tsx';
 
-const ZecronicsApp: React.FC = () => {
-  const { gameState } = useGame();
-  
+interface MainLayoutProps {
+  children: React.ReactNode;
+}
+
+// Main Layout that includes header and navigation for all pages
+const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
-    <div className="h-screen bg-gradient-to-b from-gray-900 via-blue-900 to-purple-900 text-white overflow-hidden flex flex-col">
+    <div className="h-screen bg-gradient-to-b from-gray-900 via-blue-900 to-indigo-900 text-white overflow-hidden flex flex-col">
       {/* Fixed Header */}
       <div className="flex-shrink-0">
         <Header />
       </div>
       
-      {/* Main Content Area - Fixed for GameArea, Scrollable for others */}
-      <div className={`flex-1 ${gameState.activeTab === 'home' ? 'overflow-hidden' : 'overflow-y-auto overflow-x-hidden'}`}>
-        <div className="h-full">
-          {gameState.activeTab === 'home' && <GameArea />}
-          {gameState.activeTab === 'upgrades' && <UpgradesTab />}
-          {gameState.activeTab === 'stats' && <StatsTab />}
-          {gameState.activeTab === 'market' && (
-            <div className="h-full overflow-y-auto">
-              <MarketSummary />
-            </div>
-          )}
-        </div>
+      {/* Main Content Area - Scrollable */}
+      <div className="flex-1 overflow-y-auto overflow-x-hidden">
+        {children}
       </div>
       
       {/* Fixed Navigation */}
@@ -72,11 +64,11 @@ const ZecronicsApp: React.FC = () => {
           border-radius: 4px;
         }
         .overflow-y-auto::-webkit-scrollbar-thumb {
-          background: linear-gradient(to bottom, #8b5cf6, #a855f7);
+          background: linear-gradient(to bottom, #3b82f6, #6366f1);
           border-radius: 4px;
         }
         .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(to bottom, #7c3aed, #9333ea);
+          background: linear-gradient(to bottom, #2563eb, #4f46e5);
         }
       `}</style>
     </div>
@@ -89,23 +81,98 @@ const App: React.FC = () => {
       <Router>
         <Routes>
           {/* Main Game UI */}
-          <Route path="/" element={<ZecronicsApp />} />
+          <Route path="/" element={
+            <MainLayout>
+              <GameArea />
+            </MainLayout>
+          } />
           
-          {/* Investment Page */}
-          <Route path="/investment" element={<HomePage />} />
-          <Route path="/investment/dashboard" element={<CryptoDashboardPage />} />
+          {/* Discover/Market Page */}
+          <Route path="/market" element={
+            <MainLayout>
+              <MarketSummary />
+            </MainLayout>
+          } />
+          
+          {/* Alias route for discover */}
+          <Route path="/discover" element={<Navigate to="/market" replace />} />
+          
+          {/* Partner & Community Pages */}
+          <Route path="/partner" element={
+            <MainLayout>
+              <Partner />
+            </MainLayout>
+          } />
+          
+          {/* Alias route for partners (plural) */}
+          <Route path="/partners" element={<Navigate to="/partner" replace />} />
+          
+          <Route path="/community" element={
+            <MainLayout>
+              <Community />
+            </MainLayout>
+          } />
+          
+          {/* Investment Pages */}
+          <Route path="/investment" element={
+            <MainLayout>
+              <HomePage />
+            </MainLayout>
+          } />
+          
+          <Route path="/investment/dashboard" element={
+            <MainLayout>
+              <CryptoDashboardPage />
+            </MainLayout>
+          } />
           
           {/* Income Report Routes */}
-          <Route path="/investment/income/direct" element={<DirectIncomePage />} />
-          <Route path="/investment/income/level" element={<LevelIncomePage />} />
-          <Route path="/investment/income/roi" element={<ROIIncomePage />} />
-          <Route path="/investment/income/bonus" element={<BonusIncomePage />} />
-          <Route path="/investment/income/total" element={<TotalIncomePage />} />
-           {/* Partner & Community */}
-<Route path="/partner" element={<MainLayout><Partner /></MainLayout>} />
-  <Route path="/community" element={<MainLayout><Community /></MainLayout>} />
+          <Route path="/investment/income/direct" element={
+            <MainLayout>
+              <DirectIncomePage />
+            </MainLayout>
+          } />
+          
+          <Route path="/investment/income/level" element={
+            <MainLayout>
+              <LevelIncomePage />
+            </MainLayout>
+          } />
+          
+          <Route path="/investment/income/roi" element={
+            <MainLayout>
+              <ROIIncomePage />
+            </MainLayout>
+          } />
+          
+          <Route path="/investment/income/bonus" element={
+            <MainLayout>
+              <BonusIncomePage />
+            </MainLayout>
+          } />
+          
+          <Route path="/investment/income/total" element={
+            <MainLayout>
+              <TotalIncomePage />
+            </MainLayout>
+          } />
+          
+          {/* Redirect for upgrades and stats */}
+          <Route path="/upgrades" element={
+            <MainLayout>
+              <UpgradesTab />
+            </MainLayout>
+          } />
+          
+          <Route path="/stats" element={
+            <MainLayout>
+              <StatsTab />
+            </MainLayout>
+          } />
+          
+          {/* Fallback route */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-        
       </Router>
     </GameProvider>
   );

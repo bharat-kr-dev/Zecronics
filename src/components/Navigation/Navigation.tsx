@@ -1,106 +1,106 @@
-import React from 'react';
-import { useGame } from '../../context/GameContext';
-import { Link } from 'react-router-dom';
+import React, { type JSX } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { Wallet, Search, Handshake, Users } from 'lucide-react';
+
+interface NavigationTab {
+  id: string;
+  label: string;
+  icon: JSX.Element;
+  to: string;
+}
 
 const Navigation: React.FC = () => {
-  const { gameState, setActiveTab } = useGame();
+  const location = useLocation();
   
-  const tabs = [
-    { id: 'home', label: 'Mine', icon: '⚡' },
-    { id: 'upgrades', label: 'Upgrade', icon: '🚀' },
-    { id: 'investment', label: 'Invest', icon: '💰', isLink: true, to: '/investment' },
-    { id: 'market', label: 'Market', icon: '📈' },
-    { id: 'partner', label: 'Partner', icon: '🤝', isLink: true, to: '/partner' },
-    { id: 'community', label: 'Community', icon: '🌐', isLink: true, to: '/community' },
+  // Get active tab based on current path
+  const getActiveTab = (): string => {
+    const path = location.pathname;
+    if (path === '/') return 'earn';
+    if (path === '/market' || path === '/discover') return 'discover';
+    if (path.includes('/partner')) return 'partner';
+    if (path.includes('/community')) return 'community';
+    return 'earn';
+  };
+  
+  const activeTab = getActiveTab();
+  
+  const tabs: NavigationTab[] = [
+    { 
+      id: 'earn', 
+      label: 'Earn', 
+      icon: <Wallet size={24} className="stroke-current" />, 
+      to: '/' 
+    },
+    { 
+      id: 'discover', 
+      label: 'Discover', 
+      icon: <Search size={24} className="stroke-current" />, 
+      to: '/market' 
+    },
+    { 
+      id: 'partner', 
+      label: 'Partners', 
+      icon: <Handshake size={24} className="stroke-current" />, 
+      to: '/partner' 
+    },
+    { 
+      id: 'community', 
+      label: 'Community', 
+      icon: <Users size={24} className="stroke-current" />, 
+      to: '/community' 
+    },
   ];
 
   return (
-    <div className="bg-black/90 backdrop-blur-xl border-t border-purple-500/20 safe-area-pb shadow-2xl relative">
+    <div className="bg-gray-900/95 backdrop-blur-xl border-t border-blue-500/20 safe-area-pb shadow-2xl relative">
       {/* Animated glow effect */}
-      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 animate-pulse"></div>
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-500 animate-pulse"></div>
       
       <div className="flex justify-around p-2 sm:p-3">
-        {tabs.map(tab => {
-          if (tab.isLink) {
-            return (
-              <Link
-                key={tab.id}
-                to={tab.to}
-                className={`flex flex-col items-center space-y-1 p-2 sm:p-3 rounded-2xl transition-all duration-300 border border-transparent shadow-lg transform hover:scale-105 ${
-                  tab.id === 'investment'
-                    ? 'hover:bg-gradient-to-r hover:from-yellow-500/20 hover:to-orange-500/20 hover:border-yellow-500/30 hover:shadow-yellow-500/20 animate-glow-gold'
-                    : tab.id === 'partner'
-                    ? 'hover:bg-gradient-to-r hover:from-indigo-500/20 hover:to-purple-500/20 hover:border-indigo-500/30 hover:shadow-indigo-500/20 animate-glow-partner'
-                    : 'hover:bg-gradient-to-r hover:from-green-500/20 hover:to-blue-500/20 hover:border-green-500/30 hover:shadow-green-500/20 animate-glow-market'
-                }`}
-              >
-                <span className="text-xl sm:text-2xl animate-bounce">{tab.icon}</span>
-                <span className={`text-xs font-semibold transition-colors ${
-                  tab.id === 'investment'
-                    ? 'text-yellow-300 hover:text-yellow-200'
-                    : tab.id === 'partner'
-                    ? 'text-indigo-300 hover:text-indigo-200'
-                    : 'text-green-300 hover:text-green-200'
-                }`}>
-                  {tab.label}
-                </span>
-              </Link>
-            );
-          }
-
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex flex-col items-center space-y-1 p-2 sm:p-3 rounded-2xl transition-all duration-300 transform hover:scale-105 ${
-                gameState.activeTab === tab.id
-                  ? 'bg-gradient-to-r from-purple-500/30 to-pink-500/30 border border-purple-500/50 shadow-lg shadow-purple-500/20 animate-glow-active'
-                  : 'hover:bg-white/5 border border-transparent hover:border-white/10'
-              }`}
-            >
-              <span className={`text-xl sm:text-2xl ${gameState.activeTab === tab.id ? 'animate-bounce' : 'hover:animate-pulse'}`}>
-                {tab.icon}
-              </span>
-              <span className={`text-xs font-semibold transition-colors ${
-                gameState.activeTab === tab.id
-                  ? 'text-purple-300 animate-pulse'
-                  : 'text-gray-400 hover:text-white'
-              }`}>
-                {tab.label}
-              </span>
-            </button>
-          );
-        })}
+        {tabs.map(tab => (
+          <Link
+            key={tab.id}
+            to={tab.to}
+            className={`flex flex-col items-center space-y-1 p-2 sm:p-3 rounded-xl transition-all duration-300 transform hover:scale-105 ${
+              activeTab === tab.id
+                ? 'bg-gradient-to-r from-blue-500/30 to-indigo-500/30 border border-blue-500/50 shadow-lg shadow-blue-500/20 animate-glow-active'
+                : tab.id === 'partner'
+                ? 'hover:bg-gradient-to-r hover:from-indigo-500/20 hover:to-blue-500/20 hover:border-indigo-500/30 hover:shadow-indigo-500/20 border border-transparent'
+                : tab.id === 'discover' 
+                ? 'hover:bg-gradient-to-r hover:from-green-500/20 hover:to-blue-500/20 hover:border-green-500/30 hover:shadow-green-500/20 border border-transparent'
+                : 'hover:bg-white/5 border border-transparent hover:border-white/10'
+            }`}
+          >
+            <div className={`${activeTab === tab.id ? 'text-blue-300 animate-pulse' : 'text-gray-400 group-hover:text-white'}`}>
+              {tab.icon}
+            </div>
+            <span className={`text-xs font-semibold transition-colors ${
+              activeTab === tab.id
+                ? 'text-blue-300'
+                : tab.id === 'partner'
+                ? 'text-indigo-300 hover:text-indigo-200'
+                : tab.id === 'discover'
+                ? 'text-green-300 hover:text-green-200'
+                : 'text-gray-400 hover:text-white'
+            }`}>
+              {tab.label}
+            </span>
+          </Link>
+        ))}
       </div>
 
       {/* Custom CSS for animations */}
       <style>{`
         @keyframes glow-active {
           0%, 100% {
-            box-shadow: 0 10px 25px rgba(168, 85, 247, 0.3);
-            filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.5));
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+            filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5));
           }
           50% {
-            box-shadow: 0 15px 35px rgba(168, 85, 247, 0.5);
-            filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.8));
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.5);
+            filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.8));
           }
         }
-        @keyframes glow-gold {
-          0%, 100% { filter: drop-shadow(0 0 5px rgba(234, 179, 8, 0.4)); }
-          50% { filter: drop-shadow(0 0 15px rgba(234, 179, 8, 0.8)); }
-        }
-        @keyframes glow-market {
-          0%, 100% { filter: drop-shadow(0 0 5px rgba(34, 197, 94, 0.4)); }
-          50% { filter: drop-shadow(0 0 15px rgba(34, 197, 94, 0.8)); }
-        }
-        @keyframes glow-partner {
-          0%, 100% { filter: drop-shadow(0 0 5px rgba(99, 102, 241, 0.4)); }
-          50% { filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.8)); }
-        }
-        .animate-glow-active { animation: glow-active 2s ease-in-out infinite; }
-        .animate-glow-gold { animation: glow-gold 2s ease-in-out infinite; }
-        .animate-glow-market { animation: glow-market 2s ease-in-out infinite; }
-        .animate-glow-partner { animation: glow-partner 2s ease-in-out infinite; }
         @media (max-width: 640px) {
           .safe-area-pb { padding-bottom: env(safe-area-inset-bottom); }
         }
