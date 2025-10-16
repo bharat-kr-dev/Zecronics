@@ -33,7 +33,7 @@ const partners: Partner[] = [
   },
   { 
     name: 'InfluenceX', 
-    url: 'https://influencex.app', 
+    url: 'https://zecronics.vercel.app/investment', 
     logo: '2.png', 
     description: 'Global influencer platform connecting opportunities worldwide through digital engagement.',
     category: 'Marketing'
