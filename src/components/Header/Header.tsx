@@ -2,13 +2,18 @@ import React from 'react';
 import { useGame } from '../../context/GameContext'; 
 import { formatNumber, calculateLevelProgress } from '../../utils/formatters';
 import EnergyBar from './EnergyBar';
-import {  Zap } from 'lucide-react';
+import { Zap } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 
 interface HeaderProps {}
 
 const Header: React.FC<HeaderProps> = () => {
   const { gameState } = useGame();
   const levelProgress = calculateLevelProgress(gameState.points);
+  const location = useLocation();
+  
+  // Check if we're on the home/earn page
+  const isEarnPage = location.pathname === '/' || location.pathname === '/earn';
 
   return (
     <div className="relative bg-gradient-to-r from-gray-900 via-black to-gray-900 p-3 shadow-2xl">
@@ -106,8 +111,10 @@ const Header: React.FC<HeaderProps> = () => {
           </div>
         </div>
 
-        {/* Energy Bar - Full Width on All Devices */}
-        <EnergyBar energy={gameState.energy} maxEnergy={gameState.maxEnergy} />
+        {/* Energy Bar - Only show on Earn page */}
+        {isEarnPage && (
+          <EnergyBar energy={gameState.energy} maxEnergy={gameState.maxEnergy} />
+        )}
       </div>
 
       {/* Custom CSS for animations */}
