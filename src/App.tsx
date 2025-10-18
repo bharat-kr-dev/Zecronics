@@ -8,7 +8,7 @@ import StatsTab from './components/Stats/StatsTab';
 import Navigation from './components/Navigation/Navigation';
 import HomePage from './pages/HomePage';
 import CryptoDashboardPage from './pages/CryptoDashboard';
-import MarketSummary from './pages/MarketSummary';
+
 // Income Pages
 import DirectIncomePage from './pages/DirectIncomePage';
 import LevelIncomePage from './pages/LevelIncomePage';
@@ -17,6 +17,7 @@ import BonusIncomePage from './pages/BonusIncomePage';
 import TotalIncomePage from './pages/TotalIncomePage';
 import Partner from './pages/Partner';
 import Community from './pages/Community';
+import Profile from './pages/ Profile'; 
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -87,16 +88,6 @@ const App: React.FC = () => {
             </MainLayout>
           } />
           
-          {/* Discover/Market Page */}
-          <Route path="/market" element={
-            <MainLayout>
-              <MarketSummary />
-            </MainLayout>
-          } />
-          
-          {/* Alias route for discover */}
-          <Route path="/discover" element={<Navigate to="/market" replace />} />
-          
           {/* Partner & Community Pages */}
           <Route path="/partner" element={
             <MainLayout>
@@ -113,48 +104,54 @@ const App: React.FC = () => {
             </MainLayout>
           } />
           
-          {/* Investment Pages */}
-          <Route path="/investment" element={
+          {/* Profile Page - New */}
+          <Route path="/profile" element={
             <MainLayout>
-              <HomePage />
+              <Profile />
             </MainLayout>
           } />
           
+          {/* Investment Pages */}
+          <Route path="/investment" element={
+           
+              <HomePage />
+           
+          } />
+          
           <Route path="/investment/dashboard" element={
-            <MainLayout>
+           
               <CryptoDashboardPage />
-            </MainLayout>
+           
           } />
           
           {/* Income Report Routes */}
           <Route path="/investment/income/direct" element={
-            <MainLayout>
+          
               <DirectIncomePage />
-            </MainLayout>
+         
           } />
           
           <Route path="/investment/income/level" element={
-            <MainLayout>
+           
               <LevelIncomePage />
-            </MainLayout>
+           
           } />
           
           <Route path="/investment/income/roi" element={
-            <MainLayout>
+          
               <ROIIncomePage />
-            </MainLayout>
+           
           } />
           
           <Route path="/investment/income/bonus" element={
-            <MainLayout>
+           
               <BonusIncomePage />
-            </MainLayout>
+           
           } />
           
           <Route path="/investment/income/total" element={
-            <MainLayout>
               <TotalIncomePage />
-            </MainLayout>
+           
           } />
           
           {/* Redirect for upgrades and stats */}

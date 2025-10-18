@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Building2, ExternalLink, Globe, Send, Award, Search, Filter, CheckCircle2 } from 'lucide-react';
+import { Building2, ExternalLink, Globe, Send, Award, Search, Filter, CheckCircle2, X } from 'lucide-react';
 
 interface Partner {
   name: string;
@@ -43,6 +43,14 @@ const partners: Partner[] = [
 const Partner: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState({
+    companyName: '',
+    email: '',
+    website: '',
+    category: '',
+    description: '',
+  });
   
   // Extract unique categories
   const categories = Array.from(new Set(partners.map(partner => partner.category).filter(Boolean) as string[]));
@@ -57,6 +65,36 @@ const Partner: React.FC = () => {
     return matchesSearch && matchesCategory;
   });
 
+  // Toggle modal
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
+
+  // Handle form input changes
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  // Handle form submission
+  const handleSubmit = () => {
+    console.log('Submitted form data:', formData);
+    // Here you would typically send the data to an API
+    alert('Thank you for your application! We will review it and get back to you soon.');
+    setShowModal(false);
+    // Reset form
+    setFormData({
+      companyName: '',
+      email: '',
+      website: '',
+      category: '',
+      description: '',
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white p-4 sm:p-6">
       {/* Header Section */}
@@ -69,12 +107,6 @@ const Partner: React.FC = () => {
         </p>
         
         <div className="flex flex-col md:flex-row justify-center gap-4 max-w-xl mx-auto">
-          <a
-            href="#become-partner"
-            className="bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-full text-white font-semibold transition-all duration-300 flex items-center justify-center hover:scale-105 transform shadow-lg"
-          >
-            <Building2 size={20} className="mr-2" /> Become a Partner
-          </a>
           <a
             href="#explore-deals"
             className="bg-indigo-600 hover:bg-indigo-500 px-6 py-3 rounded-full text-white font-semibold transition-all duration-300 flex items-center justify-center hover:scale-105 transform shadow-lg"
@@ -205,72 +237,145 @@ const Partner: React.FC = () => {
         )}
       </div>
       
-      {/* Become a Partner Section */}
-      <div id="become-partner" className="max-w-4xl mx-auto mb-16 bg-gradient-to-r from-blue-900/40 to-indigo-900/40 rounded-3xl overflow-hidden shadow-xl">
-        <div className="p-8">
-          <div className="flex items-center mb-6">
-            <Building2 size={32} className="text-blue-400 mr-3" />
-            <h2 className="text-2xl font-bold text-white">Become a Partner</h2>
-          </div>
-          
-          <p className="mb-6 text-gray-300">
-            Join our growing ecosystem of partners and connect with thousands of users. Showcase your products, services and offers to a highly engaged community.
-          </p>
-          
-          <form className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-gray-300 mb-1 text-sm">Company Name</label>
-                <input 
-                  type="text" 
-                  className="w-full bg-gray-700/50 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Your company name"
-                />
+      {/* Become a Partner Button (moved to bottom of the page) */}
+      <div className="max-w-4xl mx-auto mb-16 flex justify-center">
+        <button 
+          onClick={toggleModal}
+          className="bg-blue-600 hover:bg-blue-500 px-8 py-4 rounded-full text-white font-semibold transition-all duration-300 flex items-center justify-center hover:scale-105 transform shadow-lg"
+        >
+          <Building2 size={20} className="mr-2" /> Become a Partner
+        </button>
+      </div>
+      
+      {/* Partner Application Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-gradient-to-r from-blue-900/90 to-indigo-900/90 rounded-3xl overflow-hidden shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto animate-scale-in">
+            <div className="flex justify-between items-center p-6 border-b border-blue-500/30">
+              <div className="flex items-center">
+                <Building2 size={24} className="text-blue-400 mr-3" />
+                <h2 className="text-xl font-bold text-white">Partner Application</h2>
               </div>
-              
-              <div>
-                <label className="block text-gray-300 mb-1 text-sm">Email</label>
-                <input 
-                  type="email" 
-                  className="w-full bg-gray-700/50 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="contact@company.com"
-                />
-              </div>
-            </div>
-            
-            <div>
-              <label className="block text-gray-300 mb-1 text-sm">Website</label>
-              <div className="flex">
-                <div className="bg-gray-800 rounded-l-xl flex items-center px-3 border-r border-gray-600">
-                  <Globe size={18} className="text-gray-400" />
-                </div>
-                <input 
-                  type="url" 
-                  className="flex-1 bg-gray-700/50 rounded-r-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="https://yourcompany.com"
-                />
-              </div>
-            </div>
-            
-            <div>
-              <label className="block text-gray-300 mb-1 text-sm">Tell us about your company</label>
-              <textarea 
-                className="w-full bg-gray-700/50 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none min-h-[100px]"
-                placeholder="Describe your company, products or services"
-              />
-            </div>
-            
-            <div className="pt-2">
               <button 
-                type="submit" 
-                className="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-3 rounded-xl transition-colors duration-300 flex items-center justify-center"
+                onClick={toggleModal}
+                className="bg-gray-800/50 hover:bg-gray-700 rounded-full p-2 transition-colors"
               >
-                <Send size={18} className="mr-2" /> Submit Application
+                <X size={20} className="text-gray-300" />
               </button>
             </div>
-          </form>
+            
+            <div className="p-6">
+              <p className="mb-6 text-gray-300">
+                Join our growing ecosystem of partners and connect with thousands of users. Showcase your products, services and offers to a highly engaged community.
+              </p>
+              
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-gray-300 mb-1 text-sm">Company Name</label>
+                    <input 
+                      type="text" 
+                      name="companyName"
+                      value={formData.companyName}
+                      onChange={handleInputChange}
+                      className="w-full bg-gray-700/50 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Your company name"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-gray-300 mb-1 text-sm">Email</label>
+                    <input 
+                      type="email" 
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className="w-full bg-gray-700/50 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="contact@company.com"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-gray-300 mb-1 text-sm">Website</label>
+                  <div className="flex">
+                    <div className="bg-gray-800 rounded-l-xl flex items-center px-3 border-r border-gray-600">
+                      <Globe size={18} className="text-gray-400" />
+                    </div>
+                    <input 
+                      type="url" 
+                      name="website"
+                      value={formData.website}
+                      onChange={handleInputChange}
+                      className="flex-1 bg-gray-700/50 rounded-r-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="https://yourcompany.com"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-gray-300 mb-1 text-sm">Category</label>
+                  <select 
+                    name="category"
+                    value={formData.category}
+                    onChange={handleInputChange}
+                    className="w-full bg-gray-700/50 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select a category</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Finance">Finance</option>
+                    <option value="Blockchain">Blockchain</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="Food & Agriculture">Food & Agriculture</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-gray-300 mb-1 text-sm">Tell us about your company</label>
+                  <textarea 
+                    name="description"
+                    value={formData.description}
+                    onChange={handleInputChange}
+                    className="w-full bg-gray-700/50 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none min-h-[100px]"
+                    placeholder="Describe your company, products or services"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-gray-300 mb-1 text-sm">Logo</label>
+                  <div className="border-2 border-dashed border-blue-500/30 rounded-xl p-6 text-center">
+                    <div className="flex items-center justify-center mb-2">
+                      <input 
+                        type="file" 
+                        className="hidden" 
+                        id="company-logo" 
+                        accept="image/*"
+                      />
+                      <label 
+                        htmlFor="company-logo" 
+                        className="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-xl text-white font-medium transition-colors duration-300 flex items-center justify-center cursor-pointer"
+                      >
+                        Choose File
+                      </label>
+                    </div>
+                    <p className="text-gray-400 text-sm">Recommended size: 400x400px, max 2MB</p>
+                  </div>
+                </div>
+                
+                <div className="pt-2">
+                  <button 
+                    onClick={handleSubmit}
+                    className="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-3 rounded-xl transition-colors duration-300 flex items-center justify-center"
+                  >
+                    <Send size={18} className="mr-2" /> Submit Application
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
       
       {/* Custom CSS for animations */}
       <style>{`
@@ -280,6 +385,14 @@ const Partner: React.FC = () => {
         }
         .animate-fadeIn {
           animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        @keyframes scaleIn {
+          0% { opacity: 0; transform: scale(0.95); }
+          100% { opacity: 1; transform: scale(1); }
+        }
+        .animate-scale-in {
+          animation: scaleIn 0.3s ease-out forwards;
         }
       `}</style>
     </div>

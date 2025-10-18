@@ -1,6 +1,6 @@
-import React, { type JSX } from 'react';
+import  { type JSX } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Wallet, Search, Handshake, Users } from 'lucide-react';
+import { Wallet, Handshake, Users, UserCircle } from 'lucide-react';
 
 interface NavigationTab {
   id: string;
@@ -9,48 +9,48 @@ interface NavigationTab {
   to: string;
 }
 
-const Navigation: React.FC = () => {
+const Navigation = () => {
   const location = useLocation();
   
   // Get active tab based on current path
   const getActiveTab = (): string => {
     const path = location.pathname;
     if (path === '/') return 'earn';
-    if (path === '/market' || path === '/discover') return 'discover';
     if (path.includes('/partner')) return 'partner';
     if (path.includes('/community')) return 'community';
+    if (path.includes('/profile')) return 'profile';
     return 'earn';
   };
   
   const activeTab = getActiveTab();
   
   const tabs: NavigationTab[] = [
-    { 
-      id: 'earn', 
-      label: 'Earn', 
-      icon: <Wallet size={24} className="stroke-current" />, 
-      to: '/' 
+    {
+      id: 'earn',
+      label: 'Earn',
+      icon: <Wallet size={24} className="stroke-current" />,
+      to: '/'
     },
-    { 
-      id: 'discover', 
-      label: 'Discover', 
-      icon: <Search size={24} className="stroke-current" />, 
-      to: '/market' 
+    {
+      id: 'partner',
+      label: 'Partners',
+      icon: <Handshake size={24} className="stroke-current" />,
+      to: '/partner'
     },
-    { 
-      id: 'partner', 
-      label: 'Partners', 
-      icon: <Handshake size={24} className="stroke-current" />, 
-      to: '/partner' 
+    {
+      id: 'community',
+      label: 'Community',
+      icon: <Users size={24} className="stroke-current" />,
+      to: '/community'
     },
-    { 
-      id: 'community', 
-      label: 'Community', 
-      icon: <Users size={24} className="stroke-current" />, 
-      to: '/community' 
-    },
+    {
+      id: 'profile',
+      label: 'Profile',
+      icon: <UserCircle size={24} className="stroke-current" />,
+      to: '/profile'
+    }
   ];
-
+  
   return (
     <div className="bg-gray-900/95 backdrop-blur-xl border-t border-blue-500/20 safe-area-pb shadow-2xl relative">
       {/* Animated glow effect */}
@@ -66,12 +66,18 @@ const Navigation: React.FC = () => {
                 ? 'bg-gradient-to-r from-blue-500/30 to-indigo-500/30 border border-blue-500/50 shadow-lg shadow-blue-500/20 animate-glow-active'
                 : tab.id === 'partner'
                 ? 'hover:bg-gradient-to-r hover:from-indigo-500/20 hover:to-blue-500/20 hover:border-indigo-500/30 hover:shadow-indigo-500/20 border border-transparent'
-                : tab.id === 'discover' 
-                ? 'hover:bg-gradient-to-r hover:from-green-500/20 hover:to-blue-500/20 hover:border-green-500/30 hover:shadow-green-500/20 border border-transparent'
+                : tab.id === 'profile'
+                ? 'hover:bg-gradient-to-r hover:from-purple-500/20 hover:to-pink-500/20 hover:border-purple-500/30 hover:shadow-purple-500/20 border border-transparent'
                 : 'hover:bg-white/5 border border-transparent hover:border-white/10'
             }`}
           >
-            <div className={`${activeTab === tab.id ? 'text-blue-300 animate-pulse' : 'text-gray-400 group-hover:text-white'}`}>
+            <div className={`${
+              activeTab === tab.id 
+                ? 'text-blue-300 animate-pulse' 
+                : tab.id === 'profile'
+                ? 'text-purple-300 group-hover:text-purple-200'
+                : 'text-gray-400 group-hover:text-white'
+            }`}>
               {tab.icon}
             </div>
             <span className={`text-xs font-semibold transition-colors ${
@@ -79,8 +85,8 @@ const Navigation: React.FC = () => {
                 ? 'text-blue-300'
                 : tab.id === 'partner'
                 ? 'text-indigo-300 hover:text-indigo-200'
-                : tab.id === 'discover'
-                ? 'text-green-300 hover:text-green-200'
+                : tab.id === 'profile'
+                ? 'text-purple-300 hover:text-purple-200'
                 : 'text-gray-400 hover:text-white'
             }`}>
               {tab.label}
@@ -88,7 +94,7 @@ const Navigation: React.FC = () => {
           </Link>
         ))}
       </div>
-
+      
       {/* Custom CSS for animations */}
       <style>{`
         @keyframes glow-active {
